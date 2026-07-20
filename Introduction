@@ -1,0 +1,35 @@
+FastAPI is a modern high performance web framework for building APIs with framework.
+
+FastAPI is built on famous libraries of python : 1. Starlette  2. Pydantic
+
+Starlette manages how your API receives request and sends back responses.(receives and sends request)
+
+pydantic is used to check if the API is correct and in the right format.(corret format)
+
+earlier system that were used to build api has issue of performance 
+
+philosophy of API :(why called fast API)
+1. Fast to run 
+2. Fast to code (less number of lines)
+
+Q. how fast api run : (why prefer fast API over flask)
+client sends a http request to webserver which is first received by SGI then SGI converts it to python understandable code (api code) 
+webserver(http code) ----> SGI(converts http code to python understadable code and vise versa)-----> API code 
+SGI:(Server gateway interface) communicator between web server and API code
+SGI is of two types: 
+1. WSGI "Webserver gateway interface"(used in flask can process single request at a time"Synchronuous in nature" bloking in nature like at a time when 1 process is transalating other one waits" Werkzeug WSGI library)
+webserver(Gunicorn) ----> WSGI(wekzeug) -----> API code(Synchronous endpoint)
+2. ASGI(used in fastapi)"Asynchronous gateway interface"
+webserver(unicorn) ------> ASGI(starlette) ------> API code (ASynchronous endpoint supports async and await function of python used for parallel processing)
+
+Q. why fast api are fast to code?
+1. Automatic input validation(using pydantic)
+2. Auto generated Interactive Documentation
+3. Seamless Integration with modern Ecosystem(Ml/DL libraries,OAuth,JWT,SQL Alchemy,Docker,Kubernetes etc)
+
+
+
+
+
+
+
