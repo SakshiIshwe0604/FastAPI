@@ -1,3 +1,4 @@
+DAY 1:
 FastAPI is a modern high performance web framework for building APIs with framework.
 
 FastAPI is built on famous libraries of python : 1. Starlette  2. Pydantic
@@ -20,14 +21,24 @@ SGI is of two types:
 1. WSGI "Webserver gateway interface"(used in flask can process single request at a time"Synchronuous in nature" bloking in nature like at a time when 1 process is transalating other one waits" Werkzeug WSGI library)
 webserver(Gunicorn) ----> WSGI(wekzeug) -----> API code(Synchronous endpoint)
 2. ASGI(used in fastapi)"Asynchronous gateway interface"
-webserver(unicorn) ------> ASGI(starlette) ------> API code (ASynchronous endpoint supports async and await function of python used for parallel processing)
+webserver(uvicorn) ------> ASGI(starlette) ------> API code (ASynchronous endpoint supports async and await function of python used for parallel processing)
 
 Q. why fast api are fast to code?
 1. Automatic input validation(using pydantic)
 2. Auto generated Interactive Documentation
 3. Seamless Integration with modern Ecosystem(Ml/DL libraries,OAuth,JWT,SQL Alchemy,Docker,Kubernetes etc)
 
+to run the main.py use command : uvicorn main:app --reload
+DAY 2:
+Project overview 
+for a doctor building a page or a website so that they can add new pateints that visit the hospital or view their details the data of patient will be stored in a json format , update the info and delete the data
+1. create pateint records
+2. /view/patient_id  (view particular patient details)
+3. /update/patient_id
+4. /delete/patient_id
+our task is to develop the api
 
+HTTP REQUEST: helps in communication between client and server
 
 
 
