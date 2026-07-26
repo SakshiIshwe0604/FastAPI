@@ -40,7 +40,55 @@ our task is to develop the api
 
 HTTP REQUEST: helps in communication between client and server
 
+path Parameters:
+path parameters are dynamic segments of a URL path used to identify a specific resource 
+
+RUN AND ACTIVATE ENV
+sushant@sakshi:~/Desktop/Gen Ai/FastAPI$ source myvenv/bin/activate
+(myvenv) sushant@sakshi:~/Desktop/Gen Ai/FastAPI$ uvicorn main:app --reload
+
+HTTP Status codes:
+these are 3 digit number returned by a web server(like FastAPI) to indicate the result of a clients request(like browser or API consumer)
+they help the client (browser,frontned,mabile):
+-- whether the request was successful
+-- whether something went wrong
+-- and what kind of issue occured
+2xx  --> success
+3xx --> redirection
+4xx --> client error
+5xx --> server error
+
+200 -> standard success  -> get or post succeded
+201 created -> resource created  -> after post
+204 no content -> success but ot data returned  -> delete 
+400 bad request -> malformed or invalid request -> missing field wrong data type
+401 unauthorised -> no/ invalid authentication -> login required
+403 forbidden -> authenticated, but not permission -> logged in but not allowed
+404 not found -> resource dosen't exists -> patient_id not in DB
+500 internal server error -> generic faliure -> something broke on server
+502 bad gateway -> gateway(like Ngnix) failed to reach backend
+503 service unavailable -> server is down or overloaded  
+
+HTTP Extension :
+it is a special built-in exception in fast API used to return custom HTTP error responses when something goes wrong in your API 
+Instead of returning a normal JSON or crashing the server, you can generally raise an error with:
+1. a proper HTTP status code
+2. a custom error msg
+3. (optional) extra headers
 
 
+Query Parameter : (view patets data in a sorted manner on nay criteria in asc or dsc)
+query - parameter are optional key_value pairs appended to the end of a url used to pass aditional data to the server in an HTTP request. They are typically employed for operations like filtering, sorting,searching and pagination without altering the endpoint path itself.
 
+example : /patients?city=Delhi&sort_by=age
+> the ? marks the start of query parameters
+> each parameter is a key value - pair pair
+> multiple parameters are separated by & 
+
+query() is a utility function provided by fastAPI to declare, validate and document query parameters in your API endpoints.
+
+it allows you to :
+- set default value
+- enforce validation rules
+- add metadata like description
 
