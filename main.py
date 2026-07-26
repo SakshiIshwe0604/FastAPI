@@ -38,7 +38,7 @@ def sort_patients(sort_by: str = Query(..., description='Sort on the basis of he
     
     if order not in ['asc', 'desc']:
         raise HTTPException(status_code=400, detail='Invalid order select between asc and desc')
-    
+      
     data = load_data()
 
     sort_order = True if order=='desc' else False
