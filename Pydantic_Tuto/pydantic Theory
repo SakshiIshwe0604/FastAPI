@@ -1,0 +1,45 @@
+Pydantic is a Python library used for data validation, parsing, and serialization. It ensures that the data your application receives or sends has the correct structure and data types.
+
+It is used extensively in FastAPI, where it automatically validates request and response data.
+
+pydantic is neccessary because in python their is dynamic typing like we do not specify the data type unlike c , c++  and not static typing
+
+steps of pydantic: 
+Step 1: Define the Data Model
+
+Create a class that inherits from BaseModel and specify the expected fields and tStep 1: Define the Data Model
+heir types.
+
+from pydantic import BaseModel
+
+class User(BaseModel):
+    name: str
+    age: int
+
+Step 2: Receive and Validate Data
+
+Pass the input data to the model.
+
+user = User(name="Sakshi", age="22")
+
+Pydantic will:
+
+Check if all required fields are present.
+Validate the data types.
+Convert compatible types (e.g., "22" → 22).
+
+If the data is invalid:
+
+User(name="Sakshi", age="abc")
+
+It raises a ValidationError.
+
+Step 3: Use the Validated Data
+
+If validation succeeds, you get a Python object with the correct data types.
+
+print(user.name)   # Sakshi
+print(user.age)    # 22
+print(type(user.age))  # <class 'int'>
+
+Now you can safely use the data in your application without worrying about invalid input
