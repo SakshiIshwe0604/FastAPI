@@ -92,3 +92,5 @@ it allows you to :
 - enforce validation rules
 - add metadata like description
 
+PYDANTIC:
+
