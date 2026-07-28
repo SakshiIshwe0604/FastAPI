@@ -43,3 +43,13 @@ print(user.age)    # 22
 print(type(user.age))  # <class 'int'>
 
 Now you can safely use the data in your application without worrying about invalid input
+
+--> fiels validator is used when a single field needs to be varified
+--> model validator is used when the whole pydantic model needs to be varified or one field depends on the ther field like for example if patient age is greater then 60 they must provide emergency contact number before they admit.
+--> computed filed  is filed whoes value is not provided by the user it is calculated using other fields.
+--> Nested models is when you use a model as field in another model 
+Advantages of Nested models:
+# Better organization of related data (e.g., vitals, address, insurance)
+# Reusability: Use Vitals in multiple models (e.g., Patient, MedicalRecord)
+# Readability: Easier for developers and API consumers to understand
+# Validation: Nested models are validated automatically—no extra work needed
