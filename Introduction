@@ -96,3 +96,13 @@ PYDANTIC:
 
 request body:
 it is a portion of the http request that contains data sent by the client to the server it is typically used in http methods such as post, or put to transmit structuring data(ex json,XML) for the purpose of creating or updating resources on the server.the server parses the request body to extract the necessary information and perform the intended operation.
+
+# ml model with fast API
+
+model.pkl <---> API <---> frontend 
+  |          |           |
+model       FastAPI    Streamlit
+building     (part 2)     (part 3)
+(part 1)
+
+
