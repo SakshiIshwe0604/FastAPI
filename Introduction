@@ -107,3 +107,9 @@ building     (part 2)     (part 3)
 
 TO RUN FAST API APP.py
 uvicorn app:app --reload
+
+
+In fast API , a response model defines the structure of data that your API endpoint will return it help in :
+1. Generating clean API docs(/docs)
+2. validating output (so your API dosent malformed responses)
+3. filtering unnecessary data from the response
