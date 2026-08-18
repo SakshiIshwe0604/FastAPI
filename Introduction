@@ -105,4 +105,5 @@ model       FastAPI    Streamlit
 building     (part 2)     (part 3)
 (part 1)
 
-
+TO RUN FAST API APP.py
+uvicorn app:app --reload
