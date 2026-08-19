@@ -1,0 +1,642 @@
+Docker: Docker is a platform designed to help developers build,share, and run container applications
+
+Q. Why do we need Docker?
+-- consistency Accross Environment
+problem: Applications often behave diff in dev,testing,and prod enviornments due to variations in configurations,dependencies,and infra
+solution: Docker containers encapsulate all the necessary components ensuring the applications runs consistently across all environments.
+
+-- Isolation 
+problem: Running multiple app on the same host can lead to conflicts, such as dependency clashes or resource contention.
+solution: Docker provides isolated environments for each application, preventing interference and ensuring stable performance 
+
+--Scalability
+problem: Scaling applications to handle increased load can be challenging, requiring manual intervention and configuration.
+solution: Docker makes it easy to scale applications horizontally by running multiple container instances, allowing for quick and efficient scaling.
+
+how exactly docker is used?
+
+-> Docker Engine: Docker Engine is the core component of the docker platform,responsible for creating, running and managing docker containers, it serves as the runtime that powers dockers containerization capabilities. 
+
+CORE COMPONENTS OF DOCKER ENGINE:
+1. Docker Daemon(dockerd):
+function: The docker daemon is the background service running on the host machine. It manages docker objects such as image,containers,network and volumes.
+Interaction: It listens for Docker API requests and processes them, handling container lifecycle operations(start,stop,restart etc)
+
+2. Docker CLI:
+function: The docker command line interface(CLI) is the tool that users interact with to communicate with the docker daemon.
+Usage: Users run Docker commands through the CLI to perform tasks like building images,running containers, and managing docker resources.
+
+3. Rest API :
+function: The docker REST API allows communication between the docker CLI and the docker daemon. it also enables programmatic interactions with docker.
+Usage: Developers can use the API to automate docker operations or integrate docker functionality into their applications.
+
+--> Docker Image :
+A Docker Image is a light weight, stand-alone and executable software package that includes everything needed to run a piece of software such as code,runtime, libraries, environment variables, and configuration files.Images are used to create docker containers, which are instances of these images.
+(a box with everything needed to run the project )
+
+Components of a Docker Image:
+1. Base Image: The starting point for building an image . It could be minimal OS image like alpine, a full fledged OS like ubantu or even another application image like python or node.
+
+2. Application Code: the actual code and files neccessary for the application to run.
+
+3. Dependencies; Libaries, framework and packages requied by the application.
+
+4. Metadata: Information about the image, such as environment variables, labels, and exposed ports.
+
+Docker Image Lifecycle:
+1. Creation: Images are created using the docker build command, which processes the instructions in a dockerfile to create the image layer.
+
+2. Storage: Images are stored locally on the host machine. They can also be pushed to and pulled from Docker registeries like Docker Hub, AWS ECR, or google container registry.
+
+3. Distribution: Images can be shared by pushing them to a Docker registry, allowing others to pull and use the same image.
+
+4. Execution: Images are executed by running containers,which are instances of these images.
+
+--> Dockerfile
+A dockerfile is a text file that contains a series of instructions used to build a docker image each instructions in a docker file creates a layer in the image, allowing for efficient image creation and reuse of layers. Docker files are used to automate the image creation process,ensuring consistency and reproductibility.
+
+Key Components of a DockerFile
+1. Base Image — FROM
+The FROM instruction specifies the base image from which the Docker image will be created. It is usually the first instruction in a Dockerfile.
+The base image can be:
+A minimal operating system such as Ubuntu or Alpine.
+A programming language runtime such as Java, Python, or Node.js.
+Another existing Docker image.
+Syntax:
+FROM ubuntu:20.04
+Example:
+FROM python:3.11
+This means the Docker image will start with Python 3.11 already installed.
+Purpose: Provides the basic environment required by the application.
+Note: ubuntu:20.40 in your example is likely a typo; commonly used versions include ubuntu:20.04 or ubuntu:22.04.
+
+2. Labels — LABEL
+The LABEL instruction adds metadata to a Docker image.
+Labels can contain information such as:
+Author
+Version
+Description
+Project name
+Maintainer information
+Syntax:
+LABEL key="value"
+Example:
+LABEL author="Sakshi"
+LABEL version="1.0"
+LABEL description="My Python Application"
+Purpose: Helps identify, organize, and manage Docker images.
+
+3. Run Commands — RUN
+The RUN instruction executes commands during the image-building process.
+It is commonly used to:
+Install software/packages.
+Update the operating system.
+Install application dependencies.
+Create directories.
+Configure the environment.
+Example:
+RUN apt-get update
+RUN apt-get install -y git
+For Python:
+RUN pip install -r requirements.txt
+Important: RUN executes when the image is built, not when the container starts.
+
+4. Copy Files — COPY
+The COPY instruction copies files or directories from the build context on the host machine into the Docker image.
+Syntax:
+COPY source destination
+Example:
+COPY app.py /app/app.py
+Or:
+COPY . /app
+This copies the current project directory into /app inside the image.
+Purpose: Used to add application source code, configuration files, dependencies, etc., to the image.
+
+5. Environment Variables — ENV
+The ENV instruction sets environment variables inside the Docker image/container.
+Environment variables are useful for storing configuration values such as:
+Application environment
+Port numbers
+Database URLs
+Configuration settings
+Syntax:
+ENV VARIABLE=value
+Example:
+ENV APP_ENV=production
+ENV PORT=8080
+The application can access these values while running.
+Purpose: Allows configuration without hard-coding values directly into the application.
+
+6. Working Directory — WORKDIR
+The WORKDIR instruction sets the current working directory inside the Docker container.
+All subsequent instructions such as RUN, CMD, and COPY can work relative to this directory.
+Example:
+WORKDIR /app
+Then:
+COPY . .
+The files will be copied into /app.
+Purpose: Organizes the application files and avoids repeatedly writing full paths.
+
+7. Expose Ports — EXPOSE
+The EXPOSE instruction tells Docker that the container listens on a particular network port at runtime.
+Example:
+EXPOSE 8080
+For a web application running on port 8080, this indicates that port 8080 is used by the application.
+Important: EXPOSE does not actually publish the port to the host machine.
+To make it accessible from the host, you can use:
+docker run -p 8080:8080 myapp
+Purpose: Documents the intended network port used by the container.
+
+8. Command — CMD
+The CMD instruction specifies the default command that runs when a container starts.
+Example:
+CMD ["python", "app.py"]
+For a Java application:
+CMD ["java", "-jar", "app.jar"]
+There can generally be only one effective CMD in a Dockerfile. If multiple are specified, the last one takes effect.
+RUN vs CMD
+RUN	CMD
+Executes during image building	Executes when container starts
+Used to install/configure software	Used to start the application
+Creates a layer in the image	Provides the default runtime command
+
+9. Volume — VOLUME
+The VOLUME instruction creates a mount point for persistent data.
+Normally, data stored inside a container can be lost when the container is removed. Volumes allow important data to be stored separately from the container's writable layer.
+Example:
+VOLUME /app/data
+This indicates that /app/data should be used as a volume.
+Volumes are commonly used for:
+Databases
+Uploaded files
+Application-generated data
+Persistent storage
+Purpose: Provides persistent storage that exists independently of the container lifecycle.
+
+10. Arguments — ARG
+The ARG instruction defines a build-time variable.
+It allows values to be passed while building the Docker image.
+Example:
+ARG VERSION=1.0
+You can use it in the Dockerfile:
+FROM python:${VERSION}
+And provide a value during build:
+docker build --build-arg VERSION=3.11 .
+
+Docker Container and Docker Registry
+1. Docker Container
+
+A Docker container is a lightweight, isolated environment used to run an application along with all its required dependencies.
+
+A container is created from a Docker image.
+
+Example:
+
+Docker Image
+     ↓
+Docker Container
+     ↓
+Runs the application
+
+For example, if we have a Python application packaged into an image, Docker can create a container from that image and run the application in an isolated environment.
+
+Features of Docker Containers
+Lightweight – Containers share the host OS kernel, so they require fewer resources than virtual machines.
+Isolated – Applications running in different containers are isolated from each other.
+Portable – A container can run on different systems if Docker is available.
+Fast startup – Containers can start much faster than traditional virtual machines.
+Consistent environment – The application runs with the same dependencies and configuration across environments.
+2. Docker Registry
+
+A Docker Registry is a storage system used to store, manage, and distribute Docker images.
+
+It acts like a repository where Docker images can be uploaded and downloaded.
+
+Basic flow
+Developer
+    ↓
+Build Docker Image
+    ↓
+Push Image
+    ↓
+Docker Registry
+    ↓
+Pull Image
+    ↓
+Server / Another Developer
+    ↓
+Create Container
+
+For example:
+
+docker push username/myapp:1.0
+
+The image is uploaded to a registry.
+
+Another user can download it using:
+
+docker pull username/myapp:1.0
+Key Components of a Docker Registry
+1. Repositories
+
+A repository is a collection of related Docker images.
+
+It is used to organize images for a particular application or project.
+
+Example:
+
+myusername/
+    ├── shopping-app
+    ├── payment-service
+    └── user-service
+
+Here, shopping-app is a repository.
+
+A repository can contain multiple versions of an image.
+
+2. Tags
+
+A tag is a label used to identify a particular version or variant of a Docker image.
+
+Example:
+
+myusername/shopping-app:1.0
+myusername/shopping-app:2.0
+myusername/shopping-app:latest
+
+Here:
+
+shopping-app → Repository
+1.0 → Tag
+2.0 → Tag
+latest → Tag
+
+Tags make it easier to manage different versions of an application.
+
+Example
+docker pull python:3.11
+
+Here:
+
+python → Repository
+3.11 → Tag
+Types of Docker Registries
+1. Docker Hub
+
+Docker Hub is the most widely used public Docker registry.
+
+It allows developers to:
+
+Store Docker images.
+Share images publicly or privately.
+Download images created by others.
+Find official images such as Python, Java, MySQL, Ubuntu, etc.
+
+Example:
+
+docker pull nginx
+
+Docker downloads the nginx image from Docker Hub by default.
+
+2. Private Registries
+
+A private Docker registry is a registry controlled by an organization or individual.
+
+It is used when Docker images should not be publicly accessible.
+
+Organizations commonly use private registries for:
+
+Proprietary applications
+Internal services
+Sensitive software
+Enterprise deployments
+
+Examples include:
+
+Self-hosted Docker Registry
+Amazon ECR
+Azure Container Registry
+Google Artifact Registry
+3. Third-Party Registries
+
+Third-party registries are registry services provided by cloud providers or other organizations.
+
+Examples include:
+
+Amazon Elastic Container Registry (ECR)
+Google Artifact Registry
+Azure Container Registry (ACR)
+GitHub Container Registry (GHCR)
+
+They often provide additional features such as authentication, access control, vulnerability scanning, and integration with cloud services.
+
+Benefits of Using Docker Registries
+1. Centralized Image Management
+
+A registry provides a centralized location for storing and managing Docker images.
+
+Instead of keeping images only on individual developers' machines, teams can access them from a common registry.
+
+2. Version Control
+
+Registries allow different versions of an image to be stored using tags.
+
+Example:
+
+myapp:1.0
+myapp:1.1
+myapp:2.0
+
+This makes it possible to deploy a specific version whenever required.
+
+3. Collaboration
+
+Docker registries make it easy for developers and teams to share images.
+
+For example:
+
+Developer A
+    ↓
+Push image
+    ↓
+Registry
+    ↓
+Developer B
+    ↓
+Pull image
+
+Both developers can work with the same application environment.
+
+4. Security
+
+Private registries can provide security features such as:
+
+Authentication
+Authorization
+Access control
+Image vulnerability scanning
+Private repositories
+
+This helps protect proprietary application images.
+
+5. Integration with CI/CD
+
+Docker registries can be integrated with CI/CD pipelines.
+
+A typical workflow is:
+
+Developer
+    ↓
+Push Code
+    ↓
+CI/CD Pipeline
+    ↓
+Build Docker Image
+    ↓
+Push Image to Registry
+    ↓
+Deploy Image
+    ↓
+Production
+
+For example, whenever new code is pushed to GitHub, a CI/CD pipeline can automatically build a Docker image, push it to a registry, and deploy it to a server.
+
+Docker Workflow
+
+The diagram has three main things:
+
+Dockerfile → Image → Container
+
+And the Registry/Hub is used to store and share images.
+
+1. Dockerfile
+
+A Dockerfile contains all the instructions required to build a Docker image.
+
+For example:
+
+FROM python:3.11
+WORKDIR /app
+COPY . .
+RUN pip install -r requirements.txt
+CMD ["python", "app.py"]
+
+Think of the Dockerfile as a recipe that tells Docker how to create the image.
+
+2. Build → Image
+
+When we execute:
+
+docker build -t myapp .
+
+Docker reads the Dockerfile and builds an image.
+
+Dockerfile
+    |
+  Build
+    ↓
+ Docker Image
+
+A Docker image is a static, packaged version of the application containing:
+
+Application code
+Dependencies
+Libraries
+Runtime
+Configuration required to run the application
+
+The image itself is not the running application.
+
+3. Image → Container
+
+When we execute:
+
+docker run myapp
+
+Docker uses the image to create and start a container.
+
+Image
+  |
+ Run
+  ↓
+Container
+
+A container is a running instance of an image.
+
+So remember:
+
+Image = Blueprint/Template
+Container = Running instance of that blueprint
+
+For example, you can create multiple containers from the same image:
+
+             Docker Image
+            /     |      \
+           ↓      ↓       ↓
+      Container Container Container
+4. Push → Registry/Hub
+
+Once an image has been created, it can be uploaded to a Docker Registry such as Docker Hub.
+
+docker push username/myapp:1.0
+
+The flow is:
+
+Docker Image
+     |
+   Push
+     ↓
+Registry / Docker Hub
+
+The registry stores Docker images so that they can be shared and accessed from other machines.
+
+5. Pull ← Registry/Hub
+
+Suppose another developer wants to use your image.
+
+They can download it using:
+
+docker pull username/myapp:1.0
+
+The flow is:
+
+Registry / Docker Hub
+          |
+        Pull
+          ↓
+     Docker Image
+
+Then they can run it:
+
+docker run username/myapp:1.0
+
+which creates a container.
+
+Understanding the Complete Diagram
+
+The bottom part shows how an image is created locally:
+
+Dockerfile
+     |
+   BUILD
+     ↓
+   Image
+     |
+    RUN
+     ↓
+ Container
+
+The top part shows how an already-created image can be shared:
+
+                 PUSH
+Image ───────────────────→ Registry/Hub
+                              |
+                             PULL
+                              ↓
+                            Image
+                              |
+                             RUN
+                              ↓
+                          Container
+Very Important: BUILD vs RUN
+
+This is a common interview/exam question.
+
+docker build
+
+Used to create an image from a Dockerfile.
+
+docker build -t myapp .
+docker run
+
+Used to create and start a container from an image.
+
+docker run myapp
+
+So:
+
+Dockerfile → docker build → Image → docker run → Container
+
+Where does Docker Registry fit?
+
+Think of a Docker Registry like GitHub, but for Docker images.
+
+GitHub stores source code:
+
+Code → GitHub → Clone
+
+Docker Registry stores Docker images:
+
+Image → Registry → Pull
+
+For example:
+
+Developer A
+    |
+ Dockerfile
+    |
+ docker build
+    ↓
+  Image
+    |
+ docker push
+    ↓
+Docker Hub
+    |
+ docker pull
+    ↓
+Developer B
+    |
+  Image
+    |
+ docker run
+    ↓
+Container
+⭐ Exam shortcut
+
+Remember this sequence:
+
+Dockerfile → Build → Image → Push → Registry → Pull → Image → Run → Container
+
+Docker Use Cases — Short & Simple
+1. Microservices Architecture
+
+Docker runs different parts of an application in separate containers.
+
+Benefit: Easy to develop, deploy, and scale each service independently.
+
+2. CI/CD
+
+Docker provides the same environment for development, testing, and production.
+
+Benefit: Reduces errors and makes deployment faster.
+
+3. Cloud Migration
+
+Docker packages applications so they can easily be moved to the cloud.
+
+Benefit: Applications can run consistently on different cloud platforms.
+
+4. Scalable Web Applications
+
+Docker allows multiple containers to run the same web application.
+
+Benefit: Easy to increase or decrease application capacity based on traffic.
+
+5. Testing and QA
+
+Docker creates separate and consistent environments for testing.
+
+Benefit: Makes testing faster and more reliable.
+
+6. Machine Learning & AI
+
+Docker packages ML models with Python, libraries, and dependencies.
+
+Benefit: Easy deployment, scaling, and consistent ML environments.
+
+7. API Development and Deployment
+
+Docker packages APIs with all their required dependencies.
+
+Benefit: Easy development, testing, deployment, and scaling.
